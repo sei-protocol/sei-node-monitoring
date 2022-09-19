@@ -11,12 +11,19 @@ route:
   repeat_interval: 1h
   
   routes:
-    - receiver: 'seinetwork-rules'
-      group_by: ['...']
+    - matchers:
+      - severity="major"
+      receiver: seinetwork-warning
 
-  receiver: seinetwork-rules
+    - matchers:
+      - severity="critical"
+      receiver: seinetwork-rules
 
 receivers:
 - name: 'seinetwork-rules'
   pagerduty_configs:
-    - service_key: '${PAGERDUTY_SERVICE_KEY}'
+    - service_key: 'REPLACEME'
+
+- name: 'seinetwork-warning'
+  pagerduty_configs:
+     service_key: 'REPLACEME'
