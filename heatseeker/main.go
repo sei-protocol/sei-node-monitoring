@@ -21,7 +21,7 @@ func main() {
 	client := &http.Client{}
 	for {
 		log.Info("Running")
-		time.Sleep(5 * time.Second)
+		time.Sleep(60 * time.Second)
 		resp, err := client.Get(vortexEndpoint)
 		if err != nil {
 			log.WithFields(log.Fields{
