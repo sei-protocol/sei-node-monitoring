@@ -82,7 +82,7 @@ func main() {
 
 	for {
 		log.Info("Running")
-		time.Sleep(5 * time.Second)
+		time.Sleep(60 * time.Second)
 		// Add and run checks you'd like here
 		runVortexFECheck(client, vortexEndpoint)
 		runFaucetCheck(grpcConn, strings.Split(faucetAddrs, ","))
