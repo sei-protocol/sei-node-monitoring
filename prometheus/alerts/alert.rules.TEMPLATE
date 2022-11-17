@@ -218,3 +218,17 @@ groups:
         service: loadtest-client
       annotations:
         description: 'More than 5 TXs failed in the last 5 minutes in `{{ $labels.cluster_name }}` have failed due to `{{ $labels.reason }}` use `loadtest_client_sei_tx_code` to get more information'
+
+    - alert: FaucetFundsLow
+      expr: heatseeker_client_faucet_balance{address="sei1dhwul4rz8jfwvenqpyhdctax2tuljk2ag0v864", denom="usei"} < 1000000000 or heatseeker_client_faucet_balance{address="sei1dhwul4rz8jfwvenqpyhdctax2tuljk2ag0v864", denom="ibc/6D45A5CD1AADE4B527E459025AC1A5AEF41AE99091EF3069F3FEAACAFCECCD21"} < 1000000000 or heatseeker_client_faucet_balance{address="sei1dhwul4rz8jfwvenqpyhdctax2tuljk2ag0v864", denom="factory/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc/uust2"} < 10000000000000
+      labels:
+        severity: major
+        service: heatseeker
+      annotations: 'Faucet is low for aUSDC, UUST2 or SEI. Please follow oncall sop to replenish funds'
+
+    - alert: VortexFEUnreachable
+      expr: increase(heatseeker_client_status{status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations: 'Vortex Front End is unreachable. Please follow oncall sop to debug.'

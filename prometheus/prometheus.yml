@@ -41,3 +41,7 @@ scrape_configs:
     - source_labels: [address]
       target_label: __param_address
     static_configs: []
+  - job_name: heatseeker
+    metrics_path: /metrics
+    static_configs:
+      - targets: [54.183.153.214:9696]
