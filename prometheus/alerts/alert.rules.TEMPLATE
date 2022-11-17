@@ -232,12 +232,3 @@ groups:
         severity: major
         service: heatseeker
       annotations: 'Vortex Front End is unreachable. Please follow oncall sop to debug.'
-
-    - alert: DegradedSyncing
-      expr: increase(tendermint_consensus_latest_block_height[5m]) < 10
-      for: 5m
-      labels:
-        severity: major
-        service: cosmos-monitoring
-      annotations:
-        description: 'Degraded syncing performance - Job {{ $labels.job }} on {{ $labels.instance }}'
