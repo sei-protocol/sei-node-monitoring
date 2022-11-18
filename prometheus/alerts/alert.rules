@@ -225,3 +225,20 @@ groups:
         service: heatseeker
       annotations:
         description: 'Vortex Front End is unreachable. Please follow oncall sop to debug.'
+
+    - alert: FailedConcurrentTxValidations
+      expr: increase(sei_concurrent_tx_validation_failed[5m]) > 5
+      labels:
+        severity: warning
+        service: cosmos-monitoring
+      annotations:
+        description: 'Multiple failed concurrent TX validations. Please follow oncall sop to debug'
+
+    - alert: ApproachingUpgradeHeight
+      expr: 0 < max(sum(cosmos_upgrade_plan_height) by (chain_id, cluster_name)) - max(sum(tendermint_consensus_latest_block_height) by (chain_id, cluster_name)) < 2000
+      annotations:
+        title: 'Approaching upgrade height'
+        service: cosmos-monitoring
+        description: 'We are 2000 blocks away from the upgrade height defined above. Please prepare to perform upgrade'
+      labels:
+        severity: 'critical'
