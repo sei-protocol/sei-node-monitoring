@@ -45,9 +45,9 @@ groups:
       for: 5m
       labels:
         service: cosmos-exporter
-        severity: critical
+        severity: major
       annotations:
-        description: 'p50 latencies for blocks is greater than 0.75 seconds. Please investigate.'
+        description: 'p50 latencies for blocks is greater than 1 seconds. Please investigate.'
 
     - alert: NodeFilesystemReadonly
       expr: node_filesystem_readonly{fstype!~"rootfs|nfs4"} > 0
@@ -205,7 +205,7 @@ groups:
     - alert: LoadTestClientTxsNotCommitted
       expr: sum(sum_over_time(loadtest_client_sei_tx_failed[5m]) > 5) by (cluster_name, reason)
       labels:
-        severity: warning
+        severity: major
         service: loadtest-client
       annotations:
         description: 'More than 5 TXs failed in the last 5 minutes in `{{ $labels.cluster_name }}` have failed due to `{{ $labels.reason }}` use `loadtest_client_sei_tx_code` to get more information'
