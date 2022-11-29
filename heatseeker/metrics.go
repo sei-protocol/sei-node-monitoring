@@ -93,3 +93,16 @@ func ReportFaucetMetrics(address string, amount float32, denom string) {
 		},
 	)
 }
+
+func ReportIndexerMetrics(endpoint string, statusCode int) {
+	success := statusCode == 200
+	metrics.SetGaugeWithLabels(
+		[]string{"indexer_status"},
+		1,
+		[]metrics.Label{
+			telemetry.NewLabel("endpoint", endpoint),
+			telemetry.NewLabel("success", strconv.FormatBool(success)),
+			telemetry.NewLabel("status_code", strconv.FormatInt(int64(statusCode), 10)),
+		},
+	)
+}

@@ -219,12 +219,108 @@ groups:
         description: 'Faucet is low for aUSDC, UUST2 or SEI. Please follow oncall sop to replenish funds'
 
     - alert: VortexFEUnreachable
-      expr: increase(heatseeker_client_status{status_code!="200"}[5m]) > 2
+      expr: increase(heatseeker_client_indexer_status{status_code!="200"}[5m]) > 2
       labels:
         severity: major
         service: heatseeker
       annotations:
         description: 'Vortex Front End is unreachable. Please follow oncall sop to debug.'
+
+    - alert: IndexerOrdersUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/orders/sei1p9xkzlx2vr4ckmsfx9vfscvv2amyjym2z5nmrw", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex orders is unreachable. Please follow oncall sop to debug.'
+
+    - alert: IndexerSettlementsUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/settlements/sei1mpclmpd58kwk7v4sgffpj6jdfzmdy9kdt750r6", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex settlements is unreachable. Please follow oncall sop to debug.'
+
+     - alert: IndexerSettlementsByMarketUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/settlementsByMarket/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex settlements by market is unreachable. Please follow oncall sop to debug.'
+
+    - alert: IndexerFundingRateUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/fundingRate/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM/32", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex funding rate is unreachable. Please follow oncall sop to debug.'
+
+    - alert: IndexerPositionUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/position/sei1l83ev695yvrvpnqk4ymea56ergspw4rgee5kah/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM-Long", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex positions is unreachable. Please follow oncall sop to debug.'
+    
+    - alert: IndexerOraclePriceUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/oraclePrice/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-ubtc", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for oracle prices is unreachable. Please follow oncall sop to debug.'
+    
+    - alert: IndexerLongbookUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/longbook/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex longbook is unreachable. Please follow oncall sop to debug.'
+
+    - alert: IndexerShortbookUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/shortbook/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex shortbook is unreachable. Please follow oncall sop to debug.'
+    
+    - alert: IndexerMarketSummaryUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/marketSummary24hrs/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex market summary is unreachable. Please follow oncall sop to debug.'
+    
+    - alert: IndexerHistoricalPricesUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/getHistoricalPrices/sei1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqpeheyc-UST2-ATOM/5/30000", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for dex historical prices is unreachable. Please follow oncall sop to debug.'
+      
+    - alert: IndexerTxDataUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/txData", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for tx data is unreachable. Please follow oncall sop to debug.'
+    
+    - alert: IndexerTransactionCountUnreachable
+      expr: increase(heatseeker_client_status{endpoint="https://offchain-v2.sei-chain-incentivized.com/transactionCount/sei1cg4cpq0rvjjumaqlvy9cqwzlakuc6nvjmc4c8r", status_code!="200"}[5m]) > 2
+      labels:
+        severity: major
+        service: heatseeker
+      annotations:
+        description: 'The indexer endpoint for transaction count by account data is unreachable. Please follow oncall sop to debug.'
 
     - alert: FailedConcurrentTxValidations
       expr: increase(sei_concurrent_tx_validation_failed[5m]) > 5

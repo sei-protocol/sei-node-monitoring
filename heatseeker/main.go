@@ -40,6 +40,33 @@ func runVortexFECheck(client *http.Client, vortexEndpoint string) {
 
 }
 
+func runOffchainIndexerCheck(client *http.Client, endpoints []string) {
+	for _, endpoint := range endpoints {
+		resp, err := client.Get(endpoint)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"indexer_endpoint": endpoint,
+				"error":  err}).Warning("Unable to query endpoint")
+		}
+		if !(resp.StatusCode == 200) {
+			log.WithFields(log.Fields{
+				"status code": resp.StatusCode}).Warning("Didn't receive 200 status code")
+			ReportIndexerMetrics(endpoint, resp.StatusCode)
+			resp.Body.Close()
+			continue
+		}
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"body":  body,
+				"error": err}).Warning("Unable to parse body")
+		}
+		ReportIndexerMetrics(endpoint, resp.StatusCode)
+		resp.Body.Close()
+	}
+
+}
+
 func runFaucetCheck(grpcConn *grpc.ClientConn, faucetAddrs []string) {
 	bankClient := banktypes.NewQueryClient(grpcConn)
 	for _, addr := range faucetAddrs {
@@ -62,9 +89,11 @@ func main() {
 	var vortexEndpoint string
 	var nodeAddress string
 	var faucetAddrs string
+	var offchainIndexerEndpoints string
 	flag.StringVar(&vortexEndpoint, "vortex", "", "vortex endpoint to check")
 	flag.StringVar(&nodeAddress, "node-address", "", "node address to check")
 	flag.StringVar(&faucetAddrs, "faucet-addrs", "", "comma separated list of faucet addrs to check")
+	flag.StringVar(&offchainIndexerEndpoints, "offchain-indexer", "", "comma separated list of offchain indexer endpoints to check")
 	flag.Parse()
 
 	// Start metrics collector in another thread
@@ -83,8 +112,11 @@ func main() {
 	for {
 		log.Info("Running")
 		time.Sleep(60 * time.Second)
-		// Add and run checks you'd like here
+		// Vortex Frontend Check
 		runVortexFECheck(client, vortexEndpoint)
+		// Sei Faucet Check
 		runFaucetCheck(grpcConn, strings.Split(faucetAddrs, ","))
+		// Offchain Indexer Serverless Query Endpoint Check
+		runOffchainIndexerCheck(client, strings.Split(offchainIndexerEndpoints, ","))
 	}
 }
